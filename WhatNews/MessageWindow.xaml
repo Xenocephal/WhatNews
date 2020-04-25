@@ -13,30 +13,32 @@
             <Setter Property="SnapsToDevicePixels" Value="False" />
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
-                    <WindowChrome ResizeBorderThickness="5" CaptionHeight="30" GlassFrameThickness="5" CornerRadius="0"/>
+                    <WindowChrome ResizeBorderThickness="5" CaptionHeight="15" 
+                                  GlassFrameThickness="5" CornerRadius="0"/>
                 </Setter.Value>
             </Setter>
         </Style>
     </Window.Style>
     
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="1,0" StartPoint="0,0">
-                <GradientStop Color="#0A6FAF" Offset="1"/>
-                <GradientStop Color="#010A2D"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+    <Grid>        
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <Label Content="О программе" Grid.Row="0" Margin="5" 
-               Foreground="White" FontWeight="Bold"/>
-        <Border BorderThickness="1" Background="AliceBlue" BorderBrush="Gray" Margin="1" Grid.Row="1">
+
+        <Border Grid.Row="0">
+            <Border.Background>
+                <ImageBrush ImageSource="Resources/Header.png"/>
+            </Border.Background>
+        </Border>
+        <Label Content="О программе" VerticalAlignment="Center" HorizontalAlignment="Center"
+               FontSize="16" Foreground="White" FontWeight="Bold"/>
+        <Border BorderThickness="1" Background="AliceBlue" BorderBrush="Gray" Margin="0" Grid.Row="1">
             <TextBox Text="{Binding About, Mode=OneWay}" TextWrapping="Wrap" Margin="0" IsReadOnly="True" />
         </Border>
-        
+        <Button Content="Закрыть" FontSize="12"
+                Width="80" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5,5,5,5" 
+                Background="#FF29235C" Foreground="White" Opacity="0.6" Click="Button_Click"/>
     </Grid>
 </Window>
