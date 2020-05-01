@@ -45,7 +45,7 @@ namespace WhatNews {
             OpenMessageCommand = new Command(ShowMessages);
 
             NewsReader = new WebParcer(Link, System.Text.Encoding.Default);
-            Items = NewsReader.NEWS.Channel.Items.OrderByDescending(x => x.PubDate).ToList(); // Берем набор и сотрируем по дате.
+            Items = NewsReader.NEWS.Channel.Items; // Берем набор и сотрируем по дате.
             AddItems(10); // Добавляем 10 новостей из набора.
             Timer = new Timer(); // Создаем таймер.
             Timer.Interval = 120000; // Интервал обновления новостей 2 минуты
@@ -65,7 +65,7 @@ namespace WhatNews {
                 Message = "Getting News...";
                 NewsReader.GetNews(); // Получаем новости.
                 if (NewsReader.DataRecieved) { // Если данные получены и они новые:                    
-                    Items = NewsReader.NEWS.Channel.Items.OrderByDescending(x => x.PubDate).ToList(); // Берем набор и сотрируем по дате.    
+                    Items = NewsReader.NEWS.Channel.Items; // Берем набор и сотрируем по дате.    
                     ItemsToShow.Clear(); // Очищаем отображаемый набор.
                     index = 0; // Обнуляем индекс.
                     AddItems(10); // Добавляем 10 новостей из набора.
@@ -81,7 +81,7 @@ namespace WhatNews {
                 NewsReader.GetNews(); // Получаем новости.
                 if (NewsReader.DataRecieved) { // Если данные получены 
                     if (NewsReader.HasNewData) { // И если они новые:
-                        Items = NewsReader.NEWS.Channel.Items.OrderByDescending(x => x.PubDate).ToList(); // Берем набор и сотрируем по дате.
+                        Items = NewsReader.NEWS.Channel.Items; // Берем набор и сотрируем по дате.
                         int count = ItemsToShow.Count + 1; // Находим количество новостей, которое добавим с новым набором.
                         index = 0;
                         ItemsToShow.Clear();

@@ -35,10 +35,12 @@ namespace WhatNews {
 
         private void FirstStart() { // Метод выполняется при старте программы
             try {
-                Get(); // получаем новости.
-                if (File.Exists("file.xml") && File.ReadAllText("file.xml").Length == 0) SaveXML(); // если получили и они новые - сохраняем.
-                if (DataRecieved) GetRSS();
-                else NEWS = GetXMLRss();                
+                Get(); // получаем новости.                
+                if (DataRecieved) {
+                    GetRSS();
+                    if (!File.Exists("file.xml")) SaveXML();
+                }
+                else NEWS = GetXMLRss();
             }
             catch (Exception ex) { Message += $"FirstStart: [{ex.Source}] {ex.Message}\n"; }
         }
