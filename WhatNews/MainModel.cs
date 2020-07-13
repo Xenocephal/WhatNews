@@ -19,13 +19,14 @@ namespace WhatNews {
             "При отсутствие интернета и наличии данного файла, новости будут считаны из него. " +
             "\nИнтервал обновления составляет 2 минуты. Последний заголовок полученных новостей " +
             "сравнивается с заголовком сохраненных новостей, при различие происходит обновление контента.\n" +
-            "\nАвтор: Тен Антон\ne-mail: gauss87@mail.ru\nvk: https://vk.com/id318606";
+            "\nАвтор: Тен Антон\ne-mail: gauss87@mail.ru\nvk: https://vk.com/id318606 \n" +
+            "\nДизайн: Хованская Вероника\ne-mail: veronika23art@gmail.com";
 
         public Uri Link { get; set; } = new Uri("https://lenta.ru/rss/news");
         private List<Item> Items;
         private Item selectedItem;
         private int index = 0;
-        private Timer Timer;        
+        private Timer Timer;
 
         public ObservableCollection<Item> ItemsToShow { get; private set; } = new ObservableCollection<Item>();
         public Item SelectedItem { get => selectedItem; set { selectedItem = value; OnPropertyChanged("SelectedItem"); } }
@@ -47,19 +48,15 @@ namespace WhatNews {
             NewsReader = new WebParcer(Link, System.Text.Encoding.Default);
             Items = NewsReader.NEWS.Channel.Items; // Берем набор и сотрируем по дате.
             AddItems(10); // Добавляем 10 новостей из набора.
-            Timer = new Timer(); // Создаем таймер.
-            Timer.Interval = 120000; // Интервал обновления новостей 2 минуты
+            Timer = new Timer(120000); // Создаем таймер.Интервал обновления новостей 2 минуты            
             Timer.Elapsed += OnTick; // задаем действие по таймеру.
-            Timer.Start(); // Запускаем.
-            
+            Timer.Start(); // Запускаем.            
         }
-
         private void ShowMessages() { // Метод выводит окно для просмотра системных сообщений.
             MessageWindow window = new MessageWindow();
             window.DataContext = this;
             window.Show();
         }
-
         private void Refresh() { // Метод обновления новостей.
             try {
                 Message = "Getting News...";
@@ -74,7 +71,6 @@ namespace WhatNews {
             }
             catch (Exception ex) { Message = $"Refresh: [{ex.Source}] {ex.Message}\n"; }
         }
-
         private void RefreshOnTick() { // Метод обновления новостей.
             try {
                 Message = "";
@@ -87,36 +83,22 @@ namespace WhatNews {
                         ItemsToShow.Clear();
                         AddItems(count);
                         Message = NewsReader.Message; // Обновляем сообщения.
-                    }
-                    else Message += "\nData recieved, but there is no new Data.\n" + NewsReader.Message;
-                }
-                else Message = "Data was not recieved";
-            }
-            catch (Exception ex) { Message = $"Refresh: [{ex.Source}] {ex.Message}\n"; }
+                    } else Message += "\nData recieved, but there is no new Data.\n" + NewsReader.Message;
+                } else Message = "Data was not recieved";
+            } catch (Exception ex) { Message = $"Refresh: [{ex.Source}] {ex.Message}\n"; }
         }
-
         private void OnTick(object sender, ElapsedEventArgs e) {
             Application.Current.Dispatcher.Invoke(() => RefreshOnTick()); // Обновление производим из главного потока.
-        }
-        
-        internal void OpenLink(object sender, MouseButtonEventArgs e) { // Метод перехода по ссылке
-            System.Diagnostics.Process.Start(SelectedItem.Link);
-        }
-       
+        }        
+        internal void OpenLink(object sender, MouseButtonEventArgs e) { System.Diagnostics.Process.Start(SelectedItem.Link); } // Метод перехода по ссылке
         private void AddItems(int n) { // Метод добавления новостей
             if (index + n < Items.Count) { // Если мы берем не больше чем есть,
                 Items.GetRange(index, n).ForEach(item => ItemsToShow.Add(item)); // берем n новостей и добавляем их в отображаемые.
                 index += n; // Смещаем индекс на количество взятых.
             }            
         }
-
-        internal void AddNews(object sender, EventArgs e) { // Метод для события добавления новостей в список.           
-            AddItems(4); 
-        }       
-
-        private void Close() { 
-            Application.Current.Shutdown();
-        }
+        internal void AddNews(object sender, EventArgs e) { AddItems(4); } // Метод для события добавления новостей в список.      
+        private void Close() { Application.Current.Shutdown(); }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "") {

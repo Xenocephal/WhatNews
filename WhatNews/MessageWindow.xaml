@@ -8,6 +8,34 @@
         FontFamily="./Fonts/#Montserrat" FontSize="14"        
         Title="Messages" Height="400" Width="500">
 
+    <Window.Resources>
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
+                <!-- Тело кнопки -->
+                <Rectangle x:Name="ButtonRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                            
+                           Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0" 
+                           Fill="{TemplateBinding Background}" RadiusX="0" RadiusY="0" />
+                <!-- Текст кнопки -->
+                <DockPanel>
+                    <ContentPresenter x:Name="myContentPresenter" Content="{TemplateBinding  Content}" 
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}" />
+                </DockPanel>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <!-- Триггер наведения на кнопку -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property ="Rectangle.Fill" TargetName="ButtonRectangle" Value="{DynamicResource Rectangle.Background}" />
+                    <Setter Property="Rectangle.Opacity" Value="0.5" TargetName="ButtonRectangle" />
+                </Trigger>
+                <!-- Триггер нажатия на кнопку -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Rectangle.Fill" TargetName="ButtonRectangle" Value="{DynamicResource Rectangle.Background}" />
+                    <Setter Property="Rectangle.Opacity" Value="0.3" TargetName="ButtonRectangle" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
     <Window.Style>
         <Style TargetType="Window" >
             <Setter Property="SnapsToDevicePixels" Value="False" />
@@ -21,9 +49,8 @@
     </Window.Style>
     
     <Grid>        
-        
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="55"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -32,13 +59,13 @@
                 <ImageBrush ImageSource="Resources/Header.png"/>
             </Border.Background>
         </Border>
-        <Label Content="О программе" VerticalAlignment="Center" HorizontalAlignment="Center"
-               FontSize="16" Foreground="White" FontWeight="Bold"/>
+        <Label Content="О программе" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+               FontSize="14" Foreground="White" FontWeight="Bold" Margin="0,0,120,7"/>
         <Border BorderThickness="1" Background="AliceBlue" BorderBrush="Gray" Margin="0" Grid.Row="1">
-            <TextBox Text="{Binding About, Mode=OneWay}" TextWrapping="Wrap" Margin="0" IsReadOnly="True" />
+            <TextBox Text="{Binding About, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Justify" Margin="0" IsReadOnly="True" />
         </Border>
-        <Button Content="Закрыть" FontSize="12"
-                Width="80" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5,5,5,5" 
-                Background="#FF29235C" Foreground="White" Opacity="0.6" Click="Button_Click"/>
+        <Button Content="Закрыть" FontSize="15" Template="{StaticResource ButtonTemplate}"
+                Width="80" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5,5,14,7" 
+                Background="#EF5941" Foreground="White" Click="Button_Click"/>
     </Grid>
 </Window>

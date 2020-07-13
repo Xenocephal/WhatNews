@@ -7,8 +7,7 @@ using System.Xml.Serialization;
 using System.Xml;
 
 namespace WhatNews {
-    public class WebParcer { // Класс занимается подключением к веб-ресурсу и получением содержимого
-        
+    public class WebParcer { // Класс занимается подключением к веб-ресурсу и получением содержимого        
         protected internal bool DataRecieved { get => Content != null; } // Свойство показывающее есть ли контент
         public string Message { get; set; } // Сообщение
         protected internal Uri URI { get; set; } // свойство содержит ссылку на веб-ресурс 

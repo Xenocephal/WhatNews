@@ -5,75 +5,114 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WhatNews"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip" SnapsToDevicePixels="True"
         FontFamily="./Fonts/#Montserrat"
         mc:Ignorable="d"        
-        Title="What News?" Height="800" Width="700">
+        Title="What News?" 
+        Width="1000" Height="970" MaxWidth="1000" MinWidth="1000">
 
     <Window.Resources>
         <Style x:Key="ListViewStyle">
             <Style.Resources>
                 <!-- Background of selected item when focussed -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFC3D7F9" />               
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FFC3D7F9" />
             </Style.Resources>
         </Style>
+        <!--Переопределение шаблона кнопки-->
+        <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
+            <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
+                <!-- Тело кнопки -->
+                <Rectangle x:Name="ButtonRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                            
+                           Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0" 
+                           Fill="{TemplateBinding Background}" RadiusX="0" RadiusY="0" />
+                <!-- Текст кнопки -->
+                <DockPanel>
+                    <ContentPresenter x:Name="myContentPresenter" Content="{TemplateBinding  Content}" 
+                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}" />
+                </DockPanel>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <!-- Триггер наведения на кнопку -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property ="Rectangle.Fill" TargetName="ButtonRectangle" Value="{DynamicResource Rectangle.Background}" />
+                    <Setter Property="Rectangle.Opacity" Value="0.5" TargetName="ButtonRectangle" />
+                </Trigger>
+                <!-- Триггер нажатия на кнопку -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Rectangle.Fill" TargetName="ButtonRectangle" Value="{DynamicResource Rectangle.Background}" />
+                    <Setter Property="Rectangle.Opacity" Value="0.3" TargetName="ButtonRectangle" />
+                </Trigger>
+            </ControlTemplate.Triggers>       
+        </ControlTemplate>
     </Window.Resources>
-    
-    <Window.Style> 
+
+    <Window.Style>
         <Style TargetType="Window" >
-            <Setter Property="SnapsToDevicePixels" Value="False" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
-                    <WindowChrome ResizeBorderThickness="5" CaptionHeight="30" GlassFrameThickness="5" CornerRadius="0"/>
+                    <WindowChrome ResizeBorderThickness="5" CaptionHeight="55" GlassFrameThickness="0" CornerRadius="0"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Window">
                         <Border BorderThickness="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                            <Grid>                           
+                            <Grid>
                                 <!--Title bar-->
-                                <Border Height="62" VerticalAlignment="Top" Grid.Row="0">                                    
+                                <Border Height="125" VerticalAlignment="Top" Grid.Row="0">
                                     <Border.Background>
                                         <ImageBrush ImageSource="Resources/Header.png"/>
                                     </Border.Background>
                                     <Grid>
                                         <!--Logo-->
-                                        <!--<Image Source="logo.ico" Width="25" Height="25"
-                                               HorizontalAlignment="Left" Margin="2,2,2,2"/>-->
+                                        <!--<Image Source="Resources/Title.png" Width="470" Height="85"
+                                               HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="28,50,0,14"/>-->
                                         <!--Window title-->
                                         <!--<TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" 
                                                    Foreground="White"
                                                    VerticalAlignment="Top" HorizontalAlignment="Left"   
                                                    Margin="36,8,0,0"/>-->
-                                       
-                                        <!--ExitButton-->
-                                        <Button Content="Выход" Command="{Binding CloseCommand}"
-                                                Background="#FF29235C" Foreground="White" Opacity="0.6"
-                                                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                                Margin="5,5,5,5" Width="80" Height="30" BorderBrush="{x:Null}"/>
-                                        
-                                        <!--RefreshButton-->
-                                        <Button Content="Обновить" Command="{Binding RefreshCommand}"
-                                                ToolTip="Кнопка ручного обновления новостей. По-умолчанию проверка обновлений происходит каждые 2 минуты"
-                                                Background="#FF29235C" Foreground="White"
-                                                Opacity="0.6"
-                                                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                                Margin="5,5,90,5" Width="80" Height="30" BorderBrush="{x:Null}"/>
-                                        
-                                        <!--MessagesButton-->
-                                        <Button Content="О программе" Command="{Binding OpenMessageCommand}"
-                                                Background="#FF29235C" Foreground="White"
-                                                Opacity="0.6"
-                                                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                                                Margin="5,5,175,5" Width="100" Height="30" BorderBrush="{x:Null}"/>
+                                        <Grid Height="40" Width="auto" VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                                              Margin="0,0,20,14">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!--ExitButton-->
+                                            <Button Command="{Binding CloseCommand}" Content="Выход" 
+                                                    Grid.Column="2" Template="{StaticResource ButtonTemplate}"
+                                                    Background="#EF5941" Foreground="White" 
+                                                    Width="100" Margin="0,0,0,0" FontSize="22"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
+                                            </Button>
+                                            <!--MessagesButton-->
+                                            <Button Command="{Binding OpenMessageCommand}" Content="О программе"
+                                                    Grid.Column="1" Template="{StaticResource ButtonTemplate}"
+                                                    Background="#5F75FF" Foreground="White" 
+                                                    Width="155" Margin="14,0,14,0" FontSize="20"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                                            </Button>
+                                            <!--RefreshButton-->
+                                            <Button Command="{Binding RefreshCommand}" 
+                                                    Grid.Column="0" Template="{StaticResource ButtonTemplate}"
+                                                    ToolTip="Кнопка ручного обновления новостей. По-умолчанию проверка обновлений происходит каждые 2 минуты"
+                                                    Background="#5F75FF" Foreground="White" 
+                                                    Width="40" Margin="0,0,0,0" FontSize="22"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                <Image Source="Resources/Refresh2.png"/>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
-                                </Border>             
+                                </Border>
 
                                 <!--Window content-->
-                                <AdornerDecorator >                                    
-                                    <ContentPresenter Margin="0,62,0,0"/>                                    
+                                <AdornerDecorator >
+                                    <ContentPresenter Margin="0,125,0,0"/>
                                 </AdornerDecorator>
 
                             </Grid>
@@ -82,74 +121,80 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Style>   
-    
-    <Grid >
-        <ListView Name="NewsList" Style="{StaticResource ListViewStyle}" 
-                  SelectedItem="{Binding SelectedItem}">
-           
-            <ListView.ItemTemplate>               
-                <DataTemplate>                    
-                    <StackPanel Margin="0,5,0,5">
-                        <Border Margin="10,5,10,5" BorderThickness="1"                              
-                                Height="auto" CornerRadius="0" 
-                                Background="White" BorderBrush="#FF29235C">
-                            <Grid >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="auto" />                                    
-                                </Grid.RowDefinitions>
+    </Window.Style>
 
+    <!-- CONTENT -->
+    <Grid>
+        <ListView Name="NewsList" Style="{StaticResource ListViewStyle}" Margin="0,10,0,0" 
+                  BorderThickness="0" BorderBrush="White"
+                  SelectedItem="{Binding SelectedItem}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="20,10,20,10" Width="940">
+                        <Border  BorderThickness="1" BorderBrush="#FFAFBDF9"
+                                Height="auto" CornerRadius="0" 
+                                Background="White">
+                            <!--<Border.Effect>
+                                <DropShadowEffect BlurRadius="4" Color="#00184C" 
+                                                  RenderingBias="Quality" ShadowDepth="0"  Direction="0" Opacity="0.35"/>
+                            </Border.Effect>-->
+                            <Grid HorizontalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
-                                    <ColumnDefinition Width="520" />
+                                    <ColumnDefinition Width="260"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="{Binding Path=PubDate}"
-                                           Foreground="#FF29235C"
-                                           Grid.Row="0" Grid.ColumnSpan="2" 
-                                           Margin="10,10,10,0"/>
+                                <Grid Grid.Column="1" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
 
-                                <TextBlock Text="{Binding Path=Title}"
-                                           Foreground="#FF29235C"                                           
-                                           HorizontalAlignment="Left" 
-                                           FontSize="16" FontWeight="Bold" TextWrapping="Wrap"
-                                           Grid.Row="1" Grid.ColumnSpan="2" 
-                                           Margin="10,5,10,5"/>
+                                    <TextBlock Text="{Binding Path=PubDate}"
+                                               Foreground="#EF5941" FontSize="16" FontWeight="SemiBold" 
+                                               Grid.Row="0" Grid.Column="1"
+                                               Margin="15,10,15,0"/>
+
+                                    <TextBlock Text="{Binding Path=Title}"
+                                               Foreground="#283286"                                           
+                                               HorizontalAlignment="Left" 
+                                               FontSize="16" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Justify" 
+                                               Grid.Row="1" Grid.Column="1"
+                                               Margin="15,3,15,0"/>
+
+                                    <TextBlock Text="{Binding Path=Description}" 
+                                               TextOptions.TextFormattingMode="Display" 
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                               Foreground="Black" FontSize="14" TextWrapping="Wrap" TextAlignment="Justify" 
+                                               Grid.Row="2" Grid.Column="1" 
+                                               Margin="15,5,15,10" />
+
+                                    <!--<TextBlock Text="Sun, 13 Apr 2020 20:30:00 + 0300"
+                                               Foreground="#EF5941" FontSize="18" FontWeight="SemiBold" 
+                                               Grid.Row="0" Grid.Column="1"
+                                               Margin="15,10,15,0"/>
+
+                                    <TextBlock Text="В России отчитались об инвестициях в «Северный поток-2"
+                                               Foreground="#283286"                                           
+                                               HorizontalAlignment="Left" 
+                                               FontSize="18" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Justify" 
+                                               Grid.Row="1" Grid.Column="1"
+                                               Margin="15,3,15,0"/>
+
+                                    <TextBlock Text="Министерство энергетики России отчиталось об инвестициях в строительство газопровода «Северный поток-2», заявив, что финансирование уже выполнено на 95 процентов. В ведомстве подчеркнули, что «Северный поток-2» — коммерческий проект, реализацией которого занимается несколько мировых компаний."                                           
+                                               Foreground="Black" FontSize="14" TextWrapping="Wrap" TextAlignment="Justify" 
+                                               Grid.Row="2" Grid.Column="1" 
+                                               Margin="15,5,15,10"/>-->
+
+                                </Grid>
 
                                 <Image Source="{Binding Path=Enclosure.Image}" 
-                                       HorizontalAlignment="Left" VerticalAlignment="Top"  
-                                       Grid.Row="2" Grid.Column="0" 
-                                       Margin="10,2,0,10"/>
-
-                                <TextBlock Text="{Binding Path=Description}"                                             
-                                           Foreground="Black" FontSize="13" TextWrapping="Wrap"
-                                           Grid.Row="2" Grid.Column="1" 
-                                           Margin="10,0,10,10"/>
-
-                                <!--<TextBlock Text="Sun, 13 Apr 2020 20:30:00 + 0300"
-                                           Foreground="#FF29235C"
-                                           Grid.Row="0" Grid.ColumnSpan="2" 
-                                           Margin="10,10,10,0"/>
-
-                                <TextBlock Text="В России отчитались об инвестициях в «Северный поток-2"
-                                           Foreground="#FF29235C"                                           
-                                           HorizontalAlignment="Left" 
-                                           FontSize="16" FontWeight="Bold" TextWrapping="Wrap"
-                                           Grid.Row="1" Grid.ColumnSpan="2" 
-                                           Margin="10,5,10,5"/>
-
-                                <Image Source="Resources/ima.png" 
-                                       HorizontalAlignment="Left" VerticalAlignment="Top"  
-                                       Grid.Row="2" Grid.Column="0" 
-                                       Margin="10,2,0,10"/>
-
-                                <TextBlock Text="Министерство энергетики России отчиталось об инвестициях в строительство газопровода «Северный поток-2», заявив, что финансирование уже выполнено на 95 процентов. В ведомстве подчеркнули, что «Северный поток-2» — коммерческий проект, реализацией которого занимается несколько мировых компаний."                                           
-                                           Foreground="Black" FontSize="13" TextWrapping="Wrap"
-                                           Grid.Row="2" Grid.Column="1" 
-                                           Margin="10,0,10,10"/>-->
-
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Margin="0"/>
+                                <!--<Image Source="Resources/ima.png" 
+                                        HorizontalAlignment="Left" VerticalAlignment="Top"
+                                        Margin="0"/>-->
                             </Grid>
                         </Border>
                     </StackPanel>
